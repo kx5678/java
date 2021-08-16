@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+  <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>[KANWU-PCWEB]%date %level %msg %logger{10}[%thread %line]%n</pattern>
+    </encoder>
+  </appender>
+  <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!--See http://logback.qos.ch/manual/appenders.html#RollingFileAppender-->
+    <!--and http://logback.qos.ch/manual/appenders.html#TimeBasedRollingPolicy-->
+    <!--for further documentation-->
+	<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <FileNamePattern>/var/log/simt/kanwu/kanwu-pcweb.%d{yyyy-MM-dd}.log</FileNamePattern>
+    </rollingPolicy>
+    <encoder>
+      <pattern>[KANWU-PCWEB]%date %level %msg %logger{10}[%thread %line]%n</pattern>
+    </encoder>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>DEBUG</level>
+    </filter>
+  </appender>
+  <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+       <discardingThreshold>0</discardingThreshold>
+       <queueSize>512</queueSize>
+       <appender-ref ref ="ROLLING"/>
+  </appender>
+
+  <logger name="com.simt" level="DEBUG"/>
+  <logger name="freemarker" level="WARN"/>
+  <logger name="org.springframework" level="WARN"/>
+  <logger name="org.springframework.web.servlet" level="ERROR"/>
+  <logger name="org.softamis" level="WARN"/>
+  <logger name="org.apache.zookeeper" level="ERROR"/>
+  <root level="DEBUG">
+   <appender-ref ref="stdout"/>
+    <appender-ref ref="ASYNC"/>
+  </root>
+</configuration>
